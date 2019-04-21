@@ -80,6 +80,25 @@ class ColoredLineFormatter extends \Monolog\Formatter\LineFormatter
         return $colorScheme->getColorizeString($record['level']) . trim(parent::format($record)) . $colorScheme->getResetString() . "\n";
     }
 
+    protected function normalizeException($e)
+    {
+        // TODO 2.0 only check for Throwable
+        if (!$e instanceof \Exception && !$e instanceof \Throwable) {
+            throw new \InvalidArgumentException('Exception/Throwable expected, got ' . gettype($e) . ' / ' . Utils::getClass($e));
+        }
+
+        $previousText = '';
+        if ($previous = $e->getPrevious()) {
+            do {
+                $previousText .= ', ' . Utils::getClass($previous) . '(code: ' . $previous->getCode() . '): ' . $previous->getMessage() . ' at ' . $previous->getFile() . ':' . $previous->getLine();
+            } while ($previous = $previous->getPrevious());
+        }
+
+        $str = $this->formatException($e);
+
+        return $str;
+    }
+
     private function formatException(\Throwable $e): string
     {
         $str = '[object] (' . Utils::getClass($e) . '(code: ' . $e->getCode();
@@ -124,8 +143,8 @@ class ColoredLineFormatter extends \Monolog\Formatter\LineFormatter
     {
         $str = "#${index} ";
 
-        $file = $frame['file'];
-        if ($file) {
+        if (isset($frame['file'])) {
+            $file = $frame['file'];
             if (!is_string($file)) {
                 $str .= "[unknown function] ";
             } else {
@@ -135,10 +154,10 @@ class ColoredLineFormatter extends \Monolog\Formatter\LineFormatter
         } else {
             $str .= '[internal function] ';
         }
-        $str .= $frame['class'];
-        $str .= $frame['type'];
-        $str .= $frame['function'] . '(';
-        $args = $frame['args'];
+        $str .= $frame['class'] ?? '';
+        $str .= $frame['type'] ?? '';
+        $str .= $frame['function'] ?? '' . '(';
+        $args = $frame['args'] ?? false;
         if (is_array($args)) {
             $last_arg = count($args) - 1;
             foreach ($args as $key => $value) {
