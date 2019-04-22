@@ -136,7 +136,7 @@ class ColoredLineFormatter extends \Monolog\Formatter\LineFormatter
             }
             $str .= $this->_build_trace_string($frame, $index);
         }
-        return $str;
+        return substr($str, -2);
     }
 
     private function _build_trace_string($frame, $index): string
@@ -156,7 +156,8 @@ class ColoredLineFormatter extends \Monolog\Formatter\LineFormatter
         }
         $str .= $frame['class'] ?? '';
         $str .= $frame['type'] ?? '';
-        $str .= $frame['function'] ?? '' . '(';
+        $str .= $frame['function'] ?? '';
+        $str .= '(';
         $args = $frame['args'] ?? false;
         if (is_array($args)) {
             $last_arg = count($args) - 1;
