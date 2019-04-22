@@ -136,7 +136,7 @@ class ColoredLineFormatter extends \Monolog\Formatter\LineFormatter
             }
             $str .= $this->_build_trace_string($frame, $index);
         }
-        return substr($str, -2);
+        return substr($str, 0, -2);
     }
 
     private function _build_trace_string($frame, $index): string
@@ -182,7 +182,7 @@ class ColoredLineFormatter extends \Monolog\Formatter\LineFormatter
             case "double":
                 return sprintf("%.2f", $arg);
             case "string":
-                return substr($arg, 0, 15) . strlen($arg) > 15 ? '...' : '';
+                return "'" . substr($arg, 0, 15) . (strlen($arg) > 15 ? '...' : '') . "'";
             case "object":
                 return 'Object(' . get_class($arg) . ')';
             case "array":
