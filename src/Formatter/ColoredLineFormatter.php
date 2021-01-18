@@ -80,13 +80,8 @@ class ColoredLineFormatter extends \Monolog\Formatter\LineFormatter
         return $colorScheme->getColorizeString($record['level']) . trim(parent::format($record)) . $colorScheme->getResetString() . "\n";
     }
 
-    protected function normalizeException($e)
+    protected function normalizeException(\Throwable $e, int $depth = 0): string
     {
-        // TODO 2.0 only check for Throwable
-        if (!$e instanceof \Exception && !$e instanceof \Throwable) {
-            throw new \InvalidArgumentException('Exception/Throwable expected, got ' . gettype($e) . ' / ' . Utils::getClass($e));
-        }
-
         $previousText = '';
         if ($previous = $e->getPrevious()) {
             do {
