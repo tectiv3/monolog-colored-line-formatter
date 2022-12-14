@@ -136,7 +136,7 @@ class ColoredLineFormatter extends \Monolog\Formatter\LineFormatter
 
     private function _build_trace_string($frame, $index): string
     {
-        $str = "#${index} ";
+        $str = "#{$index} ";
 
         if (isset($frame['file'])) {
             $file = $frame['file'];
