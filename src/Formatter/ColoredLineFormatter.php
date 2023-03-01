@@ -25,12 +25,12 @@ class ColoredLineFormatter extends \Monolog\Formatter\LineFormatter
 
     /**
      * @param ColorSchemeInterface|null $colorScheme
-     * @param null $format The format of the message
-     * @param null $dateFormat The format of the timestamp: one supported by DateTime::format
-     * @param bool $allowInlineLineBreaks Whether to allow inline line breaks in log entries
+     * @param string|null $format                The format of the message
+     * @param string|null $dateFormat            The format of the timestamp: one supported by DateTime::format
+     * @param bool        $allowInlineLineBreaks Whether to allow inline line breaks in log entries
      * @param bool $ignoreEmptyContextAndExtra
      */
-    public function __construct(?ColorSchemeInterface $colorScheme = null, $format = null, $dateFormat = null, bool $allowInlineLineBreaks = false, bool $ignoreEmptyContextAndExtra = false)
+    public function __construct(?ColorSchemeInterface $colorScheme = null, ?string $format = null, ?string $dateFormat = null, bool $allowInlineLineBreaks = false, bool $ignoreEmptyContextAndExtra = false)
     {
         // Store the Color Scheme
         if (!$colorScheme) {
